@@ -1,0 +1,10 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace AspNetToolkit.Security {
+	public static class ClaimTypes {
+		public const string Permission = "permission";
+		public const string SecurityStamp = "security_stamp";
+	}
+}
