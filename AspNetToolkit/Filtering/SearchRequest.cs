@@ -30,5 +30,17 @@ namespace AspNetToolkit.Filtering {
 			}
 			return query;
 		}
+
+		public async Task<SearchResponse<T>> CreateResponse<T>(IQueryable<T> query, IEnumerable<IFilterItemStrategy<T>> filterItemStrategies) {
+			var predicate = FilterItems?.GetPredicate(filterItemStrategies);
+			if (predicate != null) {
+				query = query.Where(predicate);
+			}
+			var response = new SearchResponse<T>();
+			query = await PaginateQuery(query, response);
+			response.Items = await query.ToListAsync();
+			return response;
+		}
+
 	}
 }
