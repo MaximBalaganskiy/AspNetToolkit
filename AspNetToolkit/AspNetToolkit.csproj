@@ -10,6 +10,7 @@
 		<RepositoryUrl>https://github.com/MaximBalaganskiy/AspNetToolkit</RepositoryUrl>
 		<PackageTags>AspNetCore</PackageTags>
 		<Version>1.2.0</Version>
+		<PackageLicenseUrl>https://raw.githubusercontent.com/MaximBalaganskiy/AspNetToolkit/master/licence.txt</PackageLicenseUrl>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
