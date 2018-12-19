@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AspNetToolkit.Auth {
-	public interface IAuthService {
-		Task<ClaimsPrincipal> CreatePrincipal(string email, string password, string securityStamp);
-
-		string GetUserEmailFromToken(string refreshToken, string expiredToken);
-		ClaimsPrincipal GetClaimsPrincipalFromToken(string refreshToken, string expiredToken);
-
+	public interface IAuthService<TUser> where TUser : IdentityUser {
+		Task<TUser> ValidateCredentials(string email, string password, string securityStamp);
+		Task<ClaimsPrincipal> CreatePrincipal(TUser u);
+		Task<ClaimsPrincipal> CreateRefreshPrincipal(TUser u);
+		ClaimsPrincipal ValidateToken(string token, bool validateLifetime);
 		string GenerateToken(ClaimsPrincipal claimsPrincipal, DateTime expiryDate);
 	}
 }

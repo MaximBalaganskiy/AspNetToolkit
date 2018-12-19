@@ -9,7 +9,7 @@
 		<PackageProjectUrl>https://github.com/MaximBalaganskiy/AspNetToolkit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/MaximBalaganskiy/AspNetToolkit</RepositoryUrl>
 		<PackageTags>AspNetCore</PackageTags>
-		<Version>1.1.0</Version>
+		<Version>1.2.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

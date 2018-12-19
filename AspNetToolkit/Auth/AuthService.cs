@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using AspNetToolkit.Exceptions;
 
 namespace AspNetToolkit.Auth {
-	public class AuthService<TUser, TRole> : IAuthService
+	public class AuthService<TUser, TRole> : IAuthService<TUser>
 		where TUser : IdentityUser
 		where TRole : IdentityRole {
 		private readonly JwtBearerOptions _jwtOptions;
@@ -23,7 +23,24 @@ namespace AspNetToolkit.Auth {
 			_roleManager = roleManager;
 		}
 
-		public virtual Task<ClaimsIdentity> CreateClaimsIdentity(TUser u) {
+		public async Task<TUser> ValidateCredentials(string email, string password, string securityStamp) {
+			var u = await _userManager.FindByNameAsync(email);
+			if (u == null) {
+				throw new InvalidCredentialsException();
+			}
+			if (securityStamp != null && securityStamp != u.SecurityStamp) {
+				throw new InvalidCredentialsException();
+			}
+			if (password != null && !await _userManager.CheckPasswordAsync(u, password)) {
+				throw new InvalidCredentialsException();
+			}
+			if (!await _userManager.IsEmailConfirmedAsync(u)) {
+				throw new UnconfirmedEmailException();
+			}
+			return u;
+		}
+
+		protected Task<ClaimsIdentity> CreateBaseClaimsIdentity(TUser u) {
 			var ci = new ClaimsIdentity();
 			ci.AddClaims(new[]
 			{
@@ -34,17 +51,12 @@ namespace AspNetToolkit.Auth {
 			return Task.FromResult(ci);
 		}
 
-		public async Task<ClaimsPrincipal> CreatePrincipal(string email, string password, string securityStamp) {
-			var u = await _userManager.FindByNameAsync(email);
-			if (u == null)
-				throw new InvalidCredentialsException();
-			if (securityStamp != null && securityStamp != u.SecurityStamp)
-				throw new InvalidCredentialsException();
-			if (password != null && !await _userManager.CheckPasswordAsync(u, password))
-				throw new InvalidCredentialsException();
-			if (!await _userManager.IsEmailConfirmedAsync(u))
-				throw new UnconfirmedEmailException();
+		protected virtual async Task<ClaimsIdentity> CreateClaimsIdentity(TUser u) {
+			var ci = await CreateBaseClaimsIdentity(u);
+			return ci;
+		}
 
+		public async Task<ClaimsPrincipal> CreatePrincipal(TUser u) {
 			var ci = await CreateClaimsIdentity(u);
 			ci.AddClaims(await _userManager.GetClaimsAsync(u));
 			var roles = await _userManager.GetRolesAsync(u);
@@ -56,21 +68,17 @@ namespace AspNetToolkit.Auth {
 			return new ClaimsPrincipal(ci);
 		}
 
-		public string GetUserEmailFromToken(string refreshToken, string expiredToken) {
-			var handler = _jwtOptions.SecurityTokenValidators.OfType<JwtSecurityTokenHandler>().First();
-			var ovp = _jwtOptions.TokenValidationParameters.Clone();
-			ovp.ValidateLifetime = false;
-			handler.ValidateToken(expiredToken, ovp, out var validatedOldToken);
-			var claimsPrincipal = handler.ValidateToken(refreshToken, _jwtOptions.TokenValidationParameters, out var validatedToken);
-			return claimsPrincipal.GetEmail();
+		public async Task<ClaimsPrincipal> CreateRefreshPrincipal(TUser u) {
+			var ci = await CreateBaseClaimsIdentity(u);
+			ci.AddClaim(new Claim("scope", "refresh"));
+			return new ClaimsPrincipal(ci);
 		}
 
-		public ClaimsPrincipal GetClaimsPrincipalFromToken(string refreshToken, string expiredToken) {
+		public ClaimsPrincipal ValidateToken(string token, bool validateLifetime) {
 			var handler = _jwtOptions.SecurityTokenValidators.OfType<JwtSecurityTokenHandler>().First();
 			var ovp = _jwtOptions.TokenValidationParameters.Clone();
-			ovp.ValidateLifetime = false;
-			handler.ValidateToken(expiredToken, ovp, out var validatedOldToken);
-			return handler.ValidateToken(refreshToken, _jwtOptions.TokenValidationParameters, out var validatedToken);
+			ovp.ValidateLifetime = validateLifetime;
+			return handler.ValidateToken(token, ovp, out var validatedToken);
 		}
 
 		public string GenerateToken(ClaimsPrincipal claimsPrincipal, DateTime expiryDate) {
