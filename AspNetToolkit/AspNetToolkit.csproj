@@ -9,8 +9,9 @@
 		<PackageProjectUrl>https://github.com/MaximBalaganskiy/AspNetToolkit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/MaximBalaganskiy/AspNetToolkit</RepositoryUrl>
 		<PackageTags>AspNetCore</PackageTags>
-		<Version>1.2.0</Version>
-		<PackageLicenseUrl>https://raw.githubusercontent.com/MaximBalaganskiy/AspNetToolkit/master/licence.txt</PackageLicenseUrl>
+		<Version>1.2.1</Version>
+		<PackageLicenseFile>licence.txt</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -20,6 +21,10 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="licence.txt" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="LinqKit.Core" Version="1.1.15" />
