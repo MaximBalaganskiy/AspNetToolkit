@@ -40,24 +40,17 @@ namespace AspNetToolkit.Auth {
 			return u;
 		}
 
-		protected Task<ClaimsIdentity> CreateBaseClaimsIdentity(TUser u) {
-			var ci = new ClaimsIdentity();
+		protected virtual Task AddBasicClaims(TUser u, ClaimsIdentity ci) {
 			ci.AddClaims(new[]
 			{
 				new Claim(ClaimTypes.NameIdentifier, u.Id),
 				new Claim(ClaimTypes.Email, u.Email),
 				new Claim(Security.ClaimTypes.SecurityStamp, u.SecurityStamp)
 			});
-			return Task.FromResult(ci);
+			return Task.CompletedTask;
 		}
 
-		protected virtual async Task<ClaimsIdentity> CreateClaimsIdentity(TUser u) {
-			var ci = await CreateBaseClaimsIdentity(u);
-			return ci;
-		}
-
-		public async Task<ClaimsPrincipal> CreatePrincipal(TUser u) {
-			var ci = await CreateClaimsIdentity(u);
+		protected virtual async Task AddUserAndRoleClaims(TUser u, ClaimsIdentity ci) {
 			ci.AddClaims(await _userManager.GetClaimsAsync(u));
 			var roles = await _userManager.GetRolesAsync(u);
 			foreach (var r in roles) {
@@ -65,11 +58,18 @@ namespace AspNetToolkit.Auth {
 				var role = await _roleManager.FindByNameAsync(r);
 				ci.AddClaims(await _roleManager.GetClaimsAsync(role));
 			}
+		}
+
+		public async Task<ClaimsPrincipal> CreatePrincipal(TUser u) {
+			var ci = new ClaimsIdentity();
+			await AddBasicClaims(u, ci);
+			await AddUserAndRoleClaims(u, ci);
 			return new ClaimsPrincipal(ci);
 		}
 
 		public async Task<ClaimsPrincipal> CreateRefreshPrincipal(TUser u) {
-			var ci = await CreateBaseClaimsIdentity(u);
+			var ci = new ClaimsIdentity();
+			await AddBasicClaims(u, ci);
 			ci.AddClaim(new Claim("scope", "refresh"));
 			return new ClaimsPrincipal(ci);
 		}
