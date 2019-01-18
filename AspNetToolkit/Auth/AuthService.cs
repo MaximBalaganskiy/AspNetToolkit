@@ -43,7 +43,7 @@ namespace AspNetToolkit.Auth {
 		protected virtual Task AddBasicClaims(TUser u, ClaimsIdentity ci) {
 			ci.AddClaims(new[]
 			{
-				new Claim(ClaimTypes.NameIdentifier, u.Id),
+				new Claim(Security.ClaimTypes.UserId, u.Id),
 				new Claim(ClaimTypes.Email, u.Email),
 				new Claim(Security.ClaimTypes.SecurityStamp, u.SecurityStamp)
 			});

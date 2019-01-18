@@ -16,7 +16,7 @@
 		}
 
 		public static string GetId(this ClaimsPrincipal user) {
-			return user.FindFirst(ClaimTypes.NameIdentifier).Value;
+			return user.FindFirst(AspNetToolkit.Security.ClaimTypes.UserId).Value;
 		}
 	}
 }
