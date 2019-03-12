@@ -15,8 +15,7 @@ namespace AspNetToolkit.Configuration {
 		public ClientEditor ClientEditor { get; set; }
 		public List<SettingInfo> Children { get; set; }
 
-		public void HydrateSettingInfo(object o) {
-			var type = o.GetType();
+		public void HydrateSettingInfo(object o, Type type) {
 			TypeName = type.Name;
 			var props = type.GetProperties();
 			if (type.IsClass && type != typeof(string) && props.Count() > 0) {
@@ -38,7 +37,8 @@ namespace AspNetToolkit.Configuration {
 				}
 				if (Children != null) {
 					Children.Add(child);
-					child.HydrateSettingInfo(p.GetValue(o));
+					var value = o != null ? p.GetValue(o) : null;
+					child.HydrateSettingInfo(value, p.PropertyType);
 				}
 			}
 		}
