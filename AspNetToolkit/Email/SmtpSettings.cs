@@ -4,7 +4,7 @@ namespace AspNetToolkit.Email {
 	public class SmtpSettings {
 		public string Server { get; set; }
 
-		[SettingInfo("Port", ClientEditor = ClientEditor.Number)]
+		[SettingInfo("Port", ClientEditor = ClientEditor.Integer)]
 		public int Port { get; set; }
 
 		public string User { get; set; }
