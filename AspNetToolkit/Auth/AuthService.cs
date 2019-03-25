@@ -23,7 +23,7 @@ namespace AspNetToolkit.Auth {
 			_roleManager = roleManager;
 		}
 
-		public async Task<TUser> ValidateCredentials(string email, string password, string securityStamp) {
+		public async Task<TUser> ValidateCredentials(string email, string password, string securityStamp, bool lockoutOnFailure) {
 			var u = await _userManager.FindByNameAsync(email);
 			if (u == null) {
 				throw new InvalidCredentialsException();
@@ -31,8 +31,19 @@ namespace AspNetToolkit.Auth {
 			if (securityStamp != null && securityStamp != u.SecurityStamp) {
 				throw new InvalidCredentialsException();
 			}
+			if (_userManager.SupportsUserLockout && await _userManager.IsLockedOutAsync(u)) {
+				throw new LockedOutException();
+			}
+
 			if (password != null && !await _userManager.CheckPasswordAsync(u, password)) {
+				if (_userManager.SupportsUserLockout && lockoutOnFailure) {
+					// If lockout is requested, increment access failed count which might lock out the user
+					await _userManager.AccessFailedAsync(u);
+				}
 				throw new InvalidCredentialsException();
+			}
+			if (_userManager.SupportsUserLockout) {
+				await _userManager.ResetAccessFailedCountAsync(u);
 			}
 			if (!await _userManager.IsEmailConfirmedAsync(u)) {
 				throw new UnconfirmedEmailException();
