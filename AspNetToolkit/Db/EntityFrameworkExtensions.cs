@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Data.Common;
-using System.Threading;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Storage;
-
-namespace Microsoft.EntityFrameworkCore {
+﻿namespace Microsoft.EntityFrameworkCore {
 	public static class EntityFrameworkHelper {
 		/// <summary>
 		/// Adds an  entry to the context without adding its' children
