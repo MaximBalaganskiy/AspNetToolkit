@@ -7,18 +7,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AspNetToolkit.Configuration {
-	public class EFConfigurationSource : IConfigurationSource {
-		private readonly ISettingsContextFactory _factory;
+	public class EFConfigurationSource<T> : IConfigurationSource where T : class, ISetting {
+		private readonly ISettingsContextFactory<T> _factory;
 
-		public static EFConfigurationProvider Provider;
+		public static EFConfigurationProvider<T> Provider;
 
-		public EFConfigurationSource(ISettingsContextFactory factory) {
+		public EFConfigurationSource(ISettingsContextFactory<T> factory) {
 			_factory = factory;
 		}
 
 		public IConfigurationProvider Build(IConfigurationBuilder builder) {
 			// this is a hack but the only way to get to the provider from a controller to trigger a refresh
-			Provider = new EFConfigurationProvider(_factory);
+			Provider = new EFConfigurationProvider<T>(_factory);
 			return Provider;
 		}
 	}

@@ -7,10 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AspNetToolkit.Configuration {
-	public class EFConfigurationProvider : ConfigurationProvider {
-		private readonly ISettingsContextFactory _factory;
+	public class EFConfigurationProvider<T> : ConfigurationProvider where T : class, ISetting {
+		private readonly ISettingsContextFactory<T> _factory;
 
-		public EFConfigurationProvider(ISettingsContextFactory factory) {
+		public EFConfigurationProvider(ISettingsContextFactory<T> factory) {
 			_factory = factory;
 		}
 

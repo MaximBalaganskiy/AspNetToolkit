@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace AspNetToolkit.Configuration {
-	public interface ISettingsContextFactory {
-		ISettingsContext Create();
+	public interface ISettingsContextFactory<T> where T : class, ISetting {
+		ISettingsContext<T> Create();
 	}
 }

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace AspNetToolkit.Configuration {
 	public static class EntityFrameworkExtensions {
-		public static IConfigurationBuilder AddEntityFrameworkConfig(
-			this IConfigurationBuilder builder, ISettingsContextFactory factory) {
-			return builder.Add(new EFConfigurationSource(factory));
+		public static IConfigurationBuilder AddEntityFrameworkConfig<T>(this IConfigurationBuilder builder, ISettingsContextFactory<T> factory)
+			where T : class, ISetting {
+			return builder.Add(new EFConfigurationSource<T>(factory));
 		}
 	}
 }
