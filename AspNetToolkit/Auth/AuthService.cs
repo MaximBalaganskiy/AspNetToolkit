@@ -89,7 +89,7 @@ namespace AspNetToolkit.Auth {
 			var handler = _jwtOptions.SecurityTokenValidators.OfType<JwtSecurityTokenHandler>().First();
 			var ovp = _jwtOptions.TokenValidationParameters.Clone();
 			ovp.ValidateLifetime = validateLifetime;
-			return handler.ValidateToken(token, ovp, out var validatedToken);
+			return handler.ValidateToken(token, ovp, out _);
 		}
 
 		public string GenerateToken(ClaimsPrincipal claimsPrincipal, DateTime expiryDate) {

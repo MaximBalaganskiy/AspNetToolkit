@@ -16,5 +16,9 @@ namespace AspNetToolkit.Log {
 		public void TrackException(Exception exception) {
 			_telemetry.TrackException(exception);
 		}
+
+		public void Flush() {
+			_telemetry.Flush();
+		}
 	}
 }
