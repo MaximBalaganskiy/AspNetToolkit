@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.ApplicationInsights;
 
 namespace AspNetToolkit.Log {
@@ -17,6 +18,10 @@ namespace AspNetToolkit.Log {
 			_telemetry.TrackException(exception);
 		}
 
+		public void TrackEvent(string eventName, IDictionary<string, string> properties = null, IDictionary<string, double> metrics = null) {
+			_telemetry.TrackEvent(eventName, properties, metrics);
+		}
+		
 		public void Flush() {
 			_telemetry.Flush();
 		}
