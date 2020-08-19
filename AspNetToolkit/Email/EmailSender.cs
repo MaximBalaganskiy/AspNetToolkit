@@ -24,10 +24,11 @@ namespace AspNetToolkit.Email {
 
 			using var client = new SmtpClient();
 			using (var depTrack = _telemetryLogger.TrackDependency("Email", nameof(EmailSender), nameof(client.ConnectAsync))) {
-				await client.ConnectAsync(smtpSettings.Server, smtpSettings.Port, MailKit.Security.SecureSocketOptions.Auto, cancellationToken);
+				await client.ConnectAsync(smtpSettings.Server, smtpSettings.Port, smtpSettings.SecureSocketOptions, cancellationToken);
 				depTrack.Success();
 			}
-			using (var depTrack = _telemetryLogger.TrackDependency("Email", nameof(EmailSender), nameof(client.AuthenticateAsync))) {
+			if (!string.IsNullOrWhiteSpace(smtpSettings.User)) {
+				using var depTrack = _telemetryLogger.TrackDependency("Email", nameof(EmailSender), nameof(client.AuthenticateAsync));
 				await client.AuthenticateAsync(smtpSettings.User, smtpSettings.Password, cancellationToken);
 				depTrack.Success();
 			}

@@ -1,4 +1,5 @@
 ﻿using AspNetToolkit.Configuration;
+using MailKit.Security;
 
 namespace AspNetToolkit.Email {
 	public class SmtpSettings {
@@ -6,6 +7,14 @@ namespace AspNetToolkit.Email {
 
 		[SettingInfo("Port", ClientEditor = ClientEditor.Integer)]
 		public int Port { get; set; }
+
+		[SettingInfo("SecureSocketOptions", ClientEditor = ClientEditor.Select)]
+		[SelectOption(SecureSocketOptions.None, "None")]
+		[SelectOption(SecureSocketOptions.Auto, "Auto")]
+		[SelectOption(SecureSocketOptions.SslOnConnect, "SslOnConnect")]
+		[SelectOption(SecureSocketOptions.StartTls, "StartTls")]
+		[SelectOption(SecureSocketOptions.StartTlsWhenAvailable, "StartTlsWhenAvailable")]
+		public SecureSocketOptions SecureSocketOptions { get; set; } = SecureSocketOptions.Auto;
 
 		public string User { get; set; }
 
