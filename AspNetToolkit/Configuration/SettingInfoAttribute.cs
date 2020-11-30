@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace AspNetToolkit.Configuration {
+	[AttributeUsage(AttributeTargets.Property)]
 	public class SettingInfoAttribute : Attribute {
 		public SettingInfoAttribute() { }
 

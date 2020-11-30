@@ -18,7 +18,7 @@ namespace AspNetToolkit.Configuration {
 		public void HydrateSettingInfo(object o, Type type) {
 			TypeName = type.Name;
 			var props = type.GetProperties();
-			if (type.IsClass && type != typeof(string) && props.Count() > 0) {
+			if (type.IsClass && type != typeof(string) && props.Length > 0) {
 				Children = new List<SettingInfo>();
 			}
 			else {
