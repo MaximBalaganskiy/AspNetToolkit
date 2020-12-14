@@ -9,7 +9,7 @@
 		<PackageProjectUrl>https://github.com/MaximBalaganskiy/AspNetToolkit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/MaximBalaganskiy/AspNetToolkit</RepositoryUrl>
 		<PackageTags>AspNetCore</PackageTags>
-		<Version>3.0.1</Version>
+		<Version>3.1.1</Version>
 		<PackageLicenseFile>licence.txt</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 	</PropertyGroup>

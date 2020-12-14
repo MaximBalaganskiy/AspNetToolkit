@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AspNetToolkit.Filtering {
 	public static class FilterItemExtensions {
-		public static Expression<Func<T, bool>> GetPredicate<T>(this List<FilterItem> filterItems, IEnumerable<IFilterItemStrategy<T>> strategies) {
+		public static async Task<Expression<Func<T, bool>>> GetPredicate<T>(this List<FilterItem> filterItems, IEnumerable<IFilterItemStrategy<T>> strategies) {
 			Expression<Func<T, bool>> predicate = null;
 
 			// filter items with the same Guid and operators Equals or Like should be ORed instead of ANDed
@@ -20,10 +21,10 @@ namespace AspNetToolkit.Filtering {
 
 			foreach (var fig in groups) {
 				Expression<Func<T, bool>> groupPredicate = null;
-				var strategy = strategies.FirstOrDefault(x => x.GetType().Name.Replace("FilterItemStrategy", "") == fig.Key.Name);
+				var strategy = strategies.FirstOrDefault(x => x.MatchesFilterItem(fig.Key.Name));
 				if (strategy != null) {
 					foreach (var fi in fig) {
-						var fiPredicate = strategy.GetPredicate(fi);
+						var fiPredicate = await strategy.GetPredicate(fi);
 						if (fiPredicate != null) {
 							groupPredicate = groupPredicate == null
 								? fiPredicate

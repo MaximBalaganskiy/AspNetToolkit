@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AspNetToolkit.Filtering {
 	public interface IFilterItemStrategy<T> {
-		Expression<Func<T, bool>> GetPredicate(FilterItem filterItem);
+		Task<Expression<Func<T, bool>>> GetPredicate(FilterItem filterItem);
+		bool MatchesFilterItem(string name);
 	}
 }
