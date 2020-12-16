@@ -32,9 +32,11 @@ namespace AspNetToolkit.Filtering {
 		}
 
 		public async Task<SearchResponse<T>> CreateResponse<T>(IQueryable<T> query, IEnumerable<IFilterItemStrategy<T>> filterItemStrategies) {
-			var predicate = await FilterItems?.GetPredicate(filterItemStrategies);
-			if (predicate != null) {
-				query = query.Where(predicate);
+			if (FilterItems != null) {
+				var predicate = await FilterItems.GetPredicate(filterItemStrategies);
+				if (predicate != null) {
+					query = query.Where(predicate);
+				}
 			}
 			var response = new SearchResponse<T>();
 			query = await PaginateQuery(query, response);
