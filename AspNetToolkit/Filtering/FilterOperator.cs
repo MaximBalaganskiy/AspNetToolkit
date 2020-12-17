@@ -13,6 +13,7 @@ namespace AspNetToolkit.Filtering {
 		LessThan,
 		GreaterThan,
 		IsBefore,
-		IsAfter
+		IsAfter,
+		Between
 	}
 }
