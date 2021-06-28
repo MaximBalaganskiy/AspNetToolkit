@@ -13,12 +13,11 @@ namespace AspNetToolkit.Filtering {
 		LessThan = 4,
 		GreaterThan = 5,
 		IsBefore = 6,
-		IsAfter,
-		Between
 		IsAfter = 7,
-		IsOnOrAfter = 8,
-		IsBeforeOrOn = 9,
-		LessThanOrEqual = 10,
-		GreaterThanOrEqual = 11
+		Between = 8,
+		IsOnOrAfter = 9,
+		IsBeforeOrOn = 10,
+		LessThanOrEqual = 11,
+		GreaterThanOrEqual = 12
 	}
 }
