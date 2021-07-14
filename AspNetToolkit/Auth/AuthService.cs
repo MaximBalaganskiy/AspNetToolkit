@@ -71,10 +71,13 @@ namespace AspNetToolkit.Auth {
 			}
 		}
 
-		public async Task<ClaimsPrincipal> CreatePrincipal(TUser u) {
+		public async Task<ClaimsPrincipal> CreatePrincipal(TUser u, Claim[] claims = null) {
 			var ci = new ClaimsIdentity();
 			await AddBasicClaims(u, ci);
 			await AddUserAndRoleClaims(u, ci);
+			if (claims != null) {
+				ci.AddClaims(claims);
+			}
 			return new ClaimsPrincipal(ci);
 		}
 
