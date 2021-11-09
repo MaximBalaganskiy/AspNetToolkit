@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace AspNetToolkit.Email {
 	public interface IEmailSender {
-		Task Send(string from, string fromEmail, string to, string toEmail, string subject, string body, SmtpSettings smtpSettings, CancellationToken cancellationToken = default);
+		Task Send(string from, string fromEmail, string toEmail, string subject, string body, SmtpSettings smtpSettings, CancellationToken cancellationToken = default);
 	}
 }

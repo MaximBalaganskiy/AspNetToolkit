@@ -15,13 +15,8 @@ namespace AspNetToolkit.Email {
 			_logger = logger;
 		}
 
-		public async Task Send(string from, string fromEmail, string to, string toEmail, string subject, string body, SmtpSettings smtpSettings, CancellationToken cancellationToken = default) {
-			var msg = new MimeMessage();
-			msg.From.Add(new MailboxAddress(from ?? fromEmail, fromEmail));
-			msg.To.Add(new MailboxAddress(to ?? toEmail, toEmail));
-			msg.Subject = subject;
-			msg.Body = new TextPart("html") { Text = body };
-
+		public async Task Send(string from, string fromEmail, string toEmail, string subject, string body, SmtpSettings smtpSettings, CancellationToken cancellationToken = default) {
+			var msg = new MimeMessage(InternetAddressList.Parse($"{from} <{fromEmail}>"), InternetAddressList.Parse(toEmail), subject, new TextPart("html") { Text = body });
 			using var client = new SmtpClient();
 			using (var depTrack = _telemetryLogger.TrackDependency("Email", nameof(EmailSender), nameof(client.ConnectAsync))) {
 				await client.ConnectAsync(smtpSettings.Server, smtpSettings.Port, smtpSettings.SecureSocketOptions, cancellationToken);

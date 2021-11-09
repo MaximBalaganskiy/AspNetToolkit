@@ -29,6 +29,7 @@ namespace AspNetToolkit.Log {
 		}
 
 		public void Dispose() {
+			GC.SuppressFinalize(this);
 			_timer.Stop();
 			_telemetry.TrackDependency(_dependencyTypeName, _dependencyName, _command, _startTime, _timer.Elapsed, _success);
 		}

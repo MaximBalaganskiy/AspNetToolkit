@@ -16,16 +16,15 @@ namespace AspNetToolkit.Configuration {
 
 		// Load config data from EF DB.
 		public override void Load() {
-			using (var context = _factory.Create()) {
-				try {
-					Data = context.Settings.ToDictionary(c => c.Id, c => c.Value);
-				}
-				catch {
-					// database or table does not exist, load empty settings
-					Data = new Dictionary<string, string>();
-				}
-				OnReload();
+			using var context = _factory.Create();
+			try {
+				Data = context.Settings.ToDictionary(c => c.Id, c => c.Value);
 			}
+			catch {
+				// database or table does not exist, load empty settings
+				Data = new Dictionary<string, string>();
+			}
+			OnReload();
 		}
 	}
 }
