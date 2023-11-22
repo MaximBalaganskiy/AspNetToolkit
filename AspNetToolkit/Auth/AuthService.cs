@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using AspNetToolkit.Exceptions;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace AspNetToolkit.Auth {
 	public class AuthService<TUser, TRole> : IAuthService<TUser>
@@ -89,22 +90,21 @@ namespace AspNetToolkit.Auth {
 		}
 
 		public ClaimsPrincipal ValidateToken(string token, bool validateLifetime) {
-			var handler = _jwtOptions.SecurityTokenValidators.OfType<JwtSecurityTokenHandler>().First();
+			var handler = _jwtOptions.TokenHandlers.OfType<JwtSecurityTokenHandler>().First();
 			var ovp = _jwtOptions.TokenValidationParameters.Clone();
 			ovp.ValidateLifetime = validateLifetime;
 			return handler.ValidateToken(token, ovp, out _);
 		}
 
 		public string GenerateToken(ClaimsPrincipal claimsPrincipal, DateTime expiryDate) {
-			var handler = _jwtOptions.SecurityTokenValidators.OfType<JwtSecurityTokenHandler>().First();
-			var securityToken = handler.CreateToken(new SecurityTokenDescriptor() {
+			var handler = _jwtOptions.TokenHandlers.OfType<JsonWebTokenHandler>().First();
+			return handler.CreateToken(new SecurityTokenDescriptor() {
 				Issuer = _jwtOptions.TokenValidationParameters.ValidIssuer,
 				Audience = _jwtOptions.TokenValidationParameters.ValidAudience,
 				Subject = new ClaimsIdentity(claimsPrincipal.Identity),
 				SigningCredentials = new SigningCredentials(_jwtOptions.TokenValidationParameters.IssuerSigningKey, SecurityAlgorithms.RsaSha256Signature),
 				Expires = expiryDate
 			});
-			return handler.WriteToken(securityToken);
 		}
 	}
 }
